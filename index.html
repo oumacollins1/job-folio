@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oumacollins</title>
+
+    <!-- External Libraries: FontAwesome Icons & EmailJS SDK -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="icon" href="favi.jpeg" type="image/png">
+
+    <!-- ==========================================================================
+         GLOBAL STYLES (CSS Variables, Reset, & Main Design Rules)
+         ========================================================================== -->
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: rgba(15, 23, 42, 0.85);
+            --bg-card: rgba(30, 41, 59, 0.9);
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: rgba(71, 85, 105, 0.7);
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-mono: 'Consolas', 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Fullscreen Background Image & Dark Overlay Filter */
+        .photo-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('photo.jpg'); 
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
+
+        .photo-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.45);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Header & Contact Buttons Component */
+        header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .profile-title h1 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+        }
+
+        .profile-title p {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .contact-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pill {
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .pill:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .social-btn-tiktok:hover {
+            border-color: #ff0050;
+            color: #25f4ee;
+        }
+
+        .social-btn-fb:hover {
+            border-color: #1877f2;
+            color: #1877f2;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-green);
+            font-size: 0.85rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        /* Navigation Bar Styles */
+        nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(6px);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-card);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-cyan);
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--accent-cyan);
+        }
+
+        .tab-btn.highlight {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* Content Tab Displays */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid Layouts & Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Media Gallery Component */
+        .skill-gallery-large {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 160px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 182, 212, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #000;
+            font-size: 1.4rem;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* Modal Overlays & Form Containers */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 520px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .modal-header h3 {
+            color: var(--accent-cyan);
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .close-modal-btn:hover {
+            color: #ef4444;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .submit-btn {
+            background: var(--accent-cyan);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-green);
+        }
+
+        .btn-danger {
+            background: var(--accent-red) !important;
+            color: #fff !important;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626 !important;
+        }
+
+        .quick-contact-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .quick-action-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-call { background: #2563eb; }
+        .btn-whatsapp { background: #16a34a; }
+
+        /* Floating Action Button (FAB) */
+        .fab-contact {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--accent-cyan);
+            color: #000;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            transition: transform 0.2s ease;
+        }
+
+        .fab-contact:hover {
+            transform: scale(1.1);
+        }
+
+        /* Lightbox Image Preview Modal */
+        .lightbox-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 8px;
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+
+        /* Confirmation / Success Message Box */
+        .smart-modal-box {
+            text-align: center;
+            border: 2px solid var(--accent-green);
+        }
+
+        .success-icon-ring {
+            width: 70px;
+            height: 70px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            color: var(--accent-green);
+            font-size: 2rem;
+            border: 2px solid var(--accent-green);
+            animation: pulse-green 1.5s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .ticket-info {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .ticket-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .ticket-info span {
+            color: var(--accent-cyan);
+            font-family: var(--font-mono);
+        }
+
+        /* Toast Notifications */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-green);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transition: transform 0.4s ease;
+            z-index: 2000;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-notification.error {
+            background: #ef4444;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background image layers -->
+<div class="photo-background"></div>
+<div class="photo-overlay"></div>
+
+<div class="container">
+    <!-- ==========================================================================
+         HEADER / PROFILE BANNER SECTION
+         ========================================================================== -->
+    <header>
+        <div class="profile-title">
+            <h1>Ouma Collins</h1>
+            <p>B.Tech Mechanical Engineering</p>
+            
+            <div class="contact-pills">
+                <button class="pill" onclick="openContactModal()"><i class="fa-solid fa-paper-plane"></i> Quick Message</button>
+                <button class="pill" style="border-color: var(--accent-green); color: var(--accent-green);" onclick="openJobOfferModal()"><i class="fa-solid fa-briefcase"></i> Send Job Offer</button>
+                <a href="tel:254746001286" class="pill"><i class="fa-solid fa-phone"></i> +254746001286</a>
+                <a href="mailto:oumacollins002@gmail.com" class="pill"><i class="fa-solid fa-envelope"></i> oumacollins002@gmail.com</a>
+                <a href="https://www.tiktok.com/@_collinsouma" target="_blank" rel="noopener noreferrer" class="pill social-btn-tiktok"><i class="fa-brands fa-tiktok"></i> Collins Ouma</a>
+                <a href="https://www.facebook.com/collinsouma120016" target="_blank" rel="noopener noreferrer" class="pill social-btn-fb"><i class="fa-brands fa-facebook"></i> Collins Ouma</a>
+                <a href="https://instagram.com/_collinsouma" target="_blank" rel="noopener noreferrer" class="pill social-btn-instagram"><i class="fa-brands fa-instagram"></i> Collins Ouma</a>
+            </div>
+        </div>
+        <div class="status-badge" onclick="openJobOfferModal()" style="cursor: pointer;">
+            <span class="pulse-dot"></span> Available for Hire (Click)
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         TAB NAVIGATION LINKS
+         ========================================================================== -->
+    <nav>
+        <button class="tab-btn active" onclick="switchTab(event, 'overview')">Overview</button>
+        <button class="tab-btn" onclick="switchTab(event, 'skills')">Skills Matrix</button>
+        <button class="tab-btn" onclick="switchTab(event, 'projects')">Projects</button>
+        <button class="tab-btn" onclick="switchTab(event, 'other-skills')">Other Skills</button>
+        <button class="tab-btn highlight" onclick="openJobOfferModal()"><i class="fa-solid fa-file-signature"></i> Job Offer / Feedback</button>
+        <button class="tab-btn" onclick="openContactModal()">Contact Me</button>
+    </nav>
+
+    <!-- ==========================================================================
+         TAB CONTENT 1: OVERVIEW
+         ========================================================================== -->
+    <div id="overview" class="tab-content active">
+        <div class="card" style="margin-bottom: 20px;">
+            <h3>Professional Profile</h3>
+            <p>Mechanical engineering graduate with hands-on experience in design, analysis, and maintenance of mechanical systems. 
+                Proficient in CAD software and manufacturing processes.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>CAD/ CAM Design</h3>
+                <p>Proficient in SolidWorks, Fusion 360, and AutoCAD for creating detailed mechanical designs and assemblies.</p>
+            </div>
+            <div class="card">
+                <h3>CNC Machining</h3>
+                <p>Experience with CNC programming and operation for precision manufacturing of mechanical parts.</p>
+            </div>
+            <div class="card">
+                <h3>Welding and Fabrication</h3>
+                <p>Skilled in welding techniques and metal fabrication for mechanical component construction.</p>
+            </div>
+            <div class="card">
+                <h3>Production Machining</h3>
+                <p>Experience with various production machining processes for manufacturing mechanical components.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         TAB CONTENT 2: SKILLS MATRIX WITH PHOTO GALLERIES
+         ========================================================================== -->
+    <div id="skills" class="tab-content">
+        <div class="grid">
+            <!-- CNC & CAD/CAM Skills -->
+            <div class="card">
+                <h3><i class="fa-solid fa-network-wired"></i> CNC & CAD/ CAM</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Experience with CNC programming and operation for precision manufacturing of mechanical parts.</p>
+                
+                <div class="card-tags">
+                    <span class="tag">G-Codes</span>
+                    <span class="tag">Fusion 360</span>
+                </div>
+
+                <div class="skill-gallery-large">
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.jF1kO7CpCqLjgyg_hpLamgHaGz?w=157&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://tse3.mm.bing.net/th/id/OIP.k5f9taIUP7KMWicocTdhdgHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th?q=Keychain+Hole+G-Code&w=120&h=120&c=1&rs=1&qlt=70&r=0&o=7&cb=1&pid=InlineBlock&rm=3&mkt=en-WW&cc=KE&setlang=en&adlt=moderate&t=1&mw=247" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.Eful0heORJoOC4Ar2udlvQHaEK?w=329&h=185&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.HosffMVu5Wk1cbR2WGdtVAHaFj?w=182&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.Iw91FF7Oa_hklv3muAAQtAHaEL?w=302&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                </div>
+            </div>
+
+            <!-- Manufacturing Skills -->
+            <div class="card">
+                <h3><i class="fa-solid fa-industry"></i> Manufacturing & Production</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Machine operation, production planning, quality control and industrial manufacturing processes.</p>
+                
+                <div class="card-tags">
+                    <span class="tag">Production</span>
+                    <span class="tag">Milling</span>
+                    <span class="tag">Lathe</span>
+                    <span class="tag">Drilling</span>
+                    <span class="tag">Quality Control</span>
+                </div>
+
+                <div class="skill-gallery-large">
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.7m9ePvR4myrFR8VRvJQDIwHaHq?w=180&h=187&c=7&r=0&o=7&pid=1.7&rm=3" alt="CPU Processor"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.TBzsQUT-Vj7-WPBmsOswUgHaE7?w=295&h=197&c=7&r=0&o=7&pid=1.7&rm=3" alt="Motherboard Repair"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.2NZCRj9rD6luKtTPBxCB0QHaEK?w=363&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Soldering Electronics"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.My9NJEB3wAOgsv3F2iolagHaFE?w=224&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Circuit Board"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.KA0gPJhApXFapdlKZXKpOwHaE8?w=216&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="RAM & Graphics Card"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.jUmmsDN213V4kWrUIckPCgHaFj?w=232&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Hardware Repair Workstation"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.lO1lPwzhAbbOVVGznIIhdQHaG6?w=145&h=180&c=7&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.tMwDnqd3gOmJzaDAgGNHNAHaIB?w=155&h=180&c=7&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.rNbjLKGRLwnOTeFyzqOcRQHaGA?w=217&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Hard Drive Assembly"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.Ux2nrJsMZn0OtN9sf--NowHaEK?w=288&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="PC Gaming Rig Setup"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.0WfeD85FTwC5IDpn5x19yQHaE8?w=190&h=150&c=6&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://tse4.mm.bing.net/th/id/OIP.TlRVNdZSzIgJnudagfNGFAHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Thermal Paste & Cooling"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                </div>
+            </div>
+
+            <!-- Welding & Fabrication Skills -->
+            <div class="card">
+                <h3><i class="fa-solid fa-helmet-battle"></i> Welding and Fabrication</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Welding techniques, metal fabrication, and structural assembly.</p>
+
+                <div class="card-tags">
+                    <span class="tag">TIG Welding</span>
+                    <span class="tag">MIG Welding</span>
+                    <span class="tag">Sheet Metal</span>
+                    <span class="tag">Structural Assembly</span>
+                    <span class="tag">Cutting & Trimming</span>
+                    <span class="tag">Arc Welding</span>
+                    <span class="tag">Gas Welding and cutting</span>
+                    <span class="tag">Plasma Cutting</span>
+                </div>
+
+                <div class="skill-gallery-large">
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/R.d964c6399af7b7f07cf44ae76e68f497?rik=mbt3gjc%2fIg898Q&pid=ImgRaw&r=0" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://tse3.mm.bing.net/th/id/OIP.LZuL71JdbFwq7j8oBPbizgHaE7?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.5D5VlybkMPcNSg_NrbsWxQHaHa?w=201&h=201&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.rdNMPAz2SZePlX90_fgilQHaEK?w=293&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.W6OMbuUqDkeGSqKivFeWNQHaE7?w=219&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.JwWWedzkvyMNxpNX3ynM2gHaEK?w=329&h=184&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.EoIMPRcWMRGYrGj6IylwIAHaEK?w=281&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.qMxAwmQxR-mg7fL2Zbo_igHaEs?w=256&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.klbeoL2_4VdBUz12w3BAggHaE8?w=224&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.F0DG5Dq-alF4Kc9fYi92_AHaFj?w=240&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="image"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         TAB CONTENT 3: PROJECTS
+         ========================================================================== -->
+    <div id="projects" class="tab-content">
+        <div class="grid">
+            <div class="card">
+                <h3>Small Office Network Installation</h3>
+                <p>Designed and deployed an end-to-end office network infrastructure, ensuring seamless local connection, secured IP assignment, and router security configurations.</p>
+                <div class="card-tags"><span class="tag">Networking</span><span class="tag">Routers</span><span class="tag">Cabling</span></div>
+            </div>
+            <div class="card">
+                <h3>Workstation Repair & Hardware Restoration</h3>
+                <p>Successfully repaired and restored performance for multiple desktop PCs and laptops by diagnosing motherboard failures, replacing bad sectors, and upgrading memory drives.</p>
+                <div class="card-tags"><span class="tag">Hardware Repair</span><span class="tag">Diagnostics</span></div>
+            </div>
+            <div class="card">
+                <h3>Automated Multi-OS Deployment Drive</h3>
+                <p>Configured custom bootable drives to quickly deploy clean installations of Windows and Linux operating systems with built-in software suites.</p>
+                <div class="card-tags"><span class="tag">OS Installation</span><span class="tag">Maintenance</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         TAB CONTENT 4: OTHER SKILLS
+         ========================================================================== -->
+    <div id="other-skills" class="tab-content">
+        <div class="grid">
+            <div class="card">
+                <h3>2D and 3D Design</h3>
+                <p>Experience in creating detailed 2D and 3D designs for various parts and components.</p>
+                <div class="card-tags"><span class="tag">2D Design</span><span class="tag">3D Modeling</span></div>
+            </div>
+            <div class="card">
+                <h3>Domestic Solar Installation</h3>
+                <p>Proficient in installing, configuring, and maintaining solar panel systems for residential use.</p>
+                <div class="card-tags"><span class="tag">Solar Installation</span><span class="tag">Maintenance</span></div>
+            </div>
+            <div class="card">
+                <h3>Workshop Technician</h3>
+                <p>Experience in maintaining and repairing workshop equipment and machinery and training students.</p>
+                <div class="card-tags"><span class="tag">Workshop Maintenance</span><span class="tag">Training</span></div>
+            </div>
+            <div class="card">
+                <h3>CAD/CAM software trainer</h3>
+                <p>Experience in training users on CAD/CAM software for design and manufacturing applications.</p>
+                <ol style="margin-left: 20px; font-size: 0.9rem; color: var(--text-muted); margin-top: 6px;">
+                    <li>AUTOCAD</li>
+                    <li>Fusion 360</li>
+                    <li>SolidWorks</li>
+                </ol>
+                <div class="card-tags"><span class="tag">Training</span><span class="tag">CAD/CAM</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Right Floating Contact Button (FAB) -->
+<div class="fab-contact" onclick="openContactModal()" title="Contact Collins">
+    <i class="fa-solid fa-envelope"></i>
+</div>
+
+<!-- Lightbox Modal for Zooming In on Gallery Images -->
+<div class="lightbox-modal" id="lightbox" onclick="closeLightbox()">
+    <span class="close-lightbox">&times;</span>
+    <img src="" alt="Full View" class="lightbox-img" id="lightboxImg">
+</div>
+
+<!-- ==========================================================================
+     MODAL 1: GENERAL CONTACT FORM (FORM #1)
+     ========================================================================== -->
+<div class="modal-overlay" id="contactModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-headset"></i> Contact Collins Ouma</h3>
+            <button class="close-modal-btn" onclick="closeContactModal()">&times;</button>
+        </div>
+        <form id="contactForm" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label for="clientName">Your Name / Organization</label>
+                <input type="text" id="clientName" name="from_name" required placeholder="e.g. Henry Maudslay">
+            </div>
+            <div class="form-group">
+                <label for="clientEmail">Your Email or Phone Number</label>
+                <input type="text" id="clientEmail" name="from_contact" required placeholder="e.g. client@domain.com / 0712345678">
+            </div>
+            <div class="form-group">
+                <label for="serviceType">Required Service</label>
+                <input type="text" id="serviceType" name="service_type" placeholder="e.g., welding, fabrication etc.">
+            </div>
+            <div class="form-group">
+                <label for="clientMessage">Message Details</label>
+                <!-- EMPTY TEXTAREA FOR GENERAL CONTACT -->
+                <textarea id="clientMessage" name="message" rows="3" required placeholder="type your message here..."></textarea>
+            </div>
+            <button type="submit" id="submitBtn" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Direct Message</button>
+        </form>
+
+        <div class="quick-contact-actions">
+            <a href="tel:0746001286" class="quick-action-btn btn-call"><i class="fa-solid fa-phone"></i> Call Direct</a>
+            <button class="quick-action-btn btn-whatsapp" onclick="openSmartWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Dynamic WhatsApp</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 2: JOB OFFER & REJECTION FORM (FORM #2)
+     ========================================================================== -->
+<div class="modal-overlay" id="jobOfferModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-briefcase"></i> Official Job Offer / Feedback</h3>
+            <button class="close-modal-btn" onclick="closeJobOfferModal()">&times;</button>
+        </div>
+        <form id="jobOfferForm" onsubmit="handleJobOfferSubmit(event)">
+            <div class="form-group">
+                <label for="companyName">Company / Organization</label>
+                <input type="text" id="companyName" name="from_name" required placeholder="e.g. Acme Engineering Solutions">
+            </div>
+            <div class="form-group">
+                <label for="jobTitle">Offered Position / Role Title</label>
+                <input type="text" id="jobTitle" name="job_title" placeholder="e.g. Mechanical Design Engineer">
+            </div>
+            <div class="form-group">
+                <label for="recruiterContact">Recruiter Contact Info (Email or Phone)</label>
+                <input type="text" id="recruiterContact" name="from_contact" placeholder="e.g. hr@company.com / 0712345678">
+            </div>
+            <div class="form-group">
+                <label for="jobMessage">Job Offer / Rejection Message</label>
+                <!-- EMPTY TEXTAREA FOR EMPLOYER TO TYPE -->
+                <textarea id="jobMessage" name="message" rows="3" required placeholder="Type your custom job offer or rejection message here..."></textarea>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="submit" id="offerSubmitBtn" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Dispatch Job Offer</button>
+                <button type="button" class="quick-action-btn btn-whatsapp" onclick="sendJobOfferWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Send Offer via WhatsApp</button>
+                <button type="button" class="quick-action-btn btn-danger" onclick="sendRejectionWhatsApp()"><i class="fa-solid fa-xmark"></i> Send Rejection Letter via WhatsApp</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     MODAL 3: SUCCESS CONFIRMATION MODAL
+     ========================================================================== -->
+<div class="modal-overlay" id="successModal">
+    <div class="modal-box smart-modal-box">
+        <div class="success-icon-ring">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <h2 style="color: var(--accent-green); margin-bottom: 8px;">Message Delivered!</h2>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">Thank you, <strong id="deliveredClientName" style="color:#fff;"></strong>! Your dispatch has been delivered.</p>
+        
+        <div class="ticket-info">
+            <div>Status: <span style="color:var(--accent-green)">RECEIVED ✓</span></div>
+            <div>Ref Code: <span id="deliveredRefCode"></span></div>
+            <div>Expected Response: <span>within 30 minutes</span></div>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Need an urgent connection? Connect instantly on WhatsApp.</p>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="quick-action-btn btn-whatsapp" style="width: 100%; border:none;" onclick="openSmartWhatsAppFromSuccess()"><i class="fa-brands fa-whatsapp"></i> Connect on WhatsApp</button>
+            <button class="submit-btn" style="width: auto; background: var(--bg-card); color: #fff; border: 1px solid var(--border-color);" onclick="closeSuccessModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Error Toast Message Container -->
+<div class="toast-notification error" id="errorToast">
+    <i class="fa-solid fa-triangle-exclamation"></i> Error sending message. Please try WhatsApp or Call.
+</div>
+
+<!-- ==========================================================================
+     JAVASCRIPT LOGIC
+     ========================================================================== -->
+<script>
+    /* =========================================================================
+       1. EMAILJS CONFIGURATION KEYS
+       -------------------------------------------------------------------------
+       - Form 1 (General Contact) uses your primary EmailJS credentials.
+       - Form 2 (Job Offer) uses your second EmailJS account credentials.
+       ========================================================================= */
+    // General Contact Form Credentials
+    const CONTACT_PUBLIC_KEY = "9bFQf6vmPUXg4oWAY"; 
+    const CONTACT_SERVICE_ID = "service_pe4c7od";
+    const CONTACT_TEMPLATE_ID = "template_ie585yw";
+
+    // Job Offer Form Credentials (Insert your second account credentials here)
+    const JOB_OFFER_PUBLIC_KEY = "9bFQf6vmPUXg4oWAY"; 
+    const JOB_OFFER_SERVICE_ID = "service_pe4c7od";
+    const JOB_OFFER_TEMPLATE_ID = "template_wjsdule";
+
+    /* =========================================================================
+       2. TAB NAVIGATION LOGIC
+       -------------------------------------------------------------------------
+       Hides all tabs and activates the selected content tab when clicked.
+       ========================================================================= */
+    function switchTab(evt, tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+        document.getElementById(tabId).classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+
+    /* =========================================================================
+       3. LIGHTBOX IMAGE PREVIEW CONTROLLER
+       -------------------------------------------------------------------------
+       Opens clicked gallery images in a fullscreen modal view.
+       ========================================================================= */
+    function openLightbox(element) {
+        const imgSrc = element.querySelector('img').src;
+        document.getElementById('lightboxImg').src = imgSrc;
+        document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+
+    /* =========================================================================
+       4. MODAL VISIBILITY CONTROLLERS
+       -------------------------------------------------------------------------
+       Opens and closes the Contact Modal, Job Offer Modal, and Success Dialog.
+       ========================================================================= */
+    function openContactModal() {
+        document.getElementById('contactModal').classList.add('active');
+    }
+
+    function closeContactModal() {
+        document.getElementById('contactModal').classList.remove('active');
+    }
+
+    function openJobOfferModal() {
+        document.getElementById('jobOfferModal').classList.add('active');
+    }
+
+    function closeJobOfferModal() {
+        document.getElementById('jobOfferModal').classList.remove('active');
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.remove('active');
+    }
+
+    // Closes pop-ups when clicking outside the box area
+    function closeModalOnOverlay(e) {
+        if (e.target.id === 'contactModal') closeContactModal();
+        if (e.target.id === 'jobOfferModal') closeJobOfferModal();
+    }
+
+    /* =========================================================================
+       5. SMART WHATSAPP INTEGRATION ENGINE
+       -------------------------------------------------------------------------
+       Formats custom WhatsApp messages based on form inputs and local time.
+       ========================================================================= */
+    function generateGreeting() {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good morning";
+        if (hour < 17) return "Good afternoon";
+        return "Good evening";
+    }
+
+    // Direct WhatsApp message from general contact form
+    function openSmartWhatsApp() {
+        const greeting = generateGreeting();
+        const name = document.getElementById('clientName').value.trim();
+        const service = document.getElementById('serviceType').value.trim();
+        
+        let customMessage = `${greeting} Collins, `;
+        if (name) {
+            customMessage += `my name is ${name}. `;
+        } else {
+            customMessage += `I visited your portfolio website. `;
+        }
+
+        if (service) {
+            customMessage += `I am inquiring about your services regarding: ${service}.`;
+        } else {
+            customMessage += `I visited your portfolio website and would like to know more about your services.`;
+        }
+
+        const encodedMsg = encodeURIComponent(customMessage);
+        window.open(`https://wa.me/254746001286?text=${encodedMsg}`, '_blank');
+    }
+
+    // Direct WhatsApp Job Offer message
+    function sendJobOfferWhatsApp() {
+        const company = document.getElementById('companyName').value.trim() || 'Our Company';
+        const role = document.getElementById('jobTitle').value.trim() || 'Mechanical Engineer';
+        const contact = document.getElementById('recruiterContact').value.trim();
+        const userTypedMsg = document.getElementById('jobMessage').value.trim();
+        
+        let msg = userTypedMsg;
+        if (!msg) {
+            msg = `Hello Collins, ${company} is happy to inform you that you have been offered the position of ${role}. We would love to discuss the details and onboarding process with you.`;
+        }
+        if (contact && !msg.includes(contact)) {
+            msg += ` You can reach our HR team directly at: ${contact}.`;
+        }
+
+        window.open(`https://wa.me/254746001286?text=${encodeURIComponent(msg)}`, '_blank');
+        closeJobOfferModal();
+    }
+
+    // Direct WhatsApp Rejection Letter message
+    function sendRejectionWhatsApp() {
+        const company = document.getElementById('companyName').value.trim() || 'Our Organization';
+        const role = document.getElementById('jobTitle').value.trim() || 'the position';
+        const userTypedMsg = document.getElementById('jobMessage').value.trim();
+        
+        let rejectionMsg = userTypedMsg;
+        if (!rejectionMsg) {
+            rejectionMsg = `Hello Collins, thank you for taking the time to apply and interview for ${role} at ${company}. We appreciate your time and impressive technical engineering background. However, we regret to inform you that we have decided to move forward with another candidate whose qualifications more closely align with our current immediate needs. We wish you the best in your professional journey.`;
+        }
+
+        window.open(`https://wa.me/254746001286?text=${encodeURIComponent(rejectionMsg)}`, '_blank');
+        closeJobOfferModal();
+    }
+
+    // Quick WhatsApp connect after form dispatch confirmation
+    function openSmartWhatsAppFromSuccess() {
+        const greeting = generateGreeting();
+        const name = document.getElementById('clientName').value.trim() || "a client";
+        const msg = `${greeting} Collins! I just sent a form submission from your portfolio website under '${name}'. Looking forward to connecting with you.`;
+        
+        window.open(`https://wa.me/254746001286?text=${encodeURIComponent(msg)}`, '_blank');
+        closeSuccessModal();
+    }
+
+    /* =========================================================================
+       6. EMAILJS FORM SUBMISSION HANDLER - GENERAL CONTACT FORM
+       -------------------------------------------------------------------------
+       Dispatches General Contact Form data using Primary EmailJS Keys.
+       ========================================================================= */
+    function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.innerHTML;
+        const nameInput = document.getElementById('clientName').value;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching...';
+
+        // Dispatches using CONTACT_PUBLIC_KEY as the 4th parameter
+        emailjs.sendForm(CONTACT_SERVICE_ID, CONTACT_TEMPLATE_ID, e.target, CONTACT_PUBLIC_KEY)
+            .then(function() {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                closeContactModal();
+
+                const randomRef = '#CO-' + Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('deliveredClientName').innerText = nameInput;
+                document.getElementById('deliveredRefCode').innerText = randomRef;
+
+                document.getElementById('successModal').classList.add('active');
+                document.getElementById('contactForm').reset();
+            }, function(error) {
+                console.error('EmailJS Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                const errToast = document.getElementById('errorToast');
+                errToast.classList.add('show');
+                setTimeout(() => errToast.classList.remove('show'), 4000);
+            });
+    }
+
+    /* =========================================================================
+       7. EMAILJS FORM SUBMISSION HANDLER - JOB OFFER FORM
+       -------------------------------------------------------------------------
+       Dispatches Job Offer Form data using Secondary EmailJS Keys.
+       ========================================================================= */
+    function handleJobOfferSubmit(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('offerSubmitBtn');
+        const originalText = submitBtn.innerHTML;
+        const companyInput = document.getElementById('companyName').value;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching Offer...';
+
+        // Dispatches using JOB_OFFER_PUBLIC_KEY as the 4th parameter
+        emailjs.sendForm(JOB_OFFER_SERVICE_ID, JOB_OFFER_TEMPLATE_ID, e.target, JOB_OFFER_PUBLIC_KEY)
+            .then(function() {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                closeJobOfferModal();
+
+                const randomRef = '#OFFER-' + Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('deliveredClientName').innerText = companyInput;
+                document.getElementById('deliveredRefCode').innerText = randomRef;
+
+                document.getElementById('successModal').classList.add('active');
+                document.getElementById('jobOfferForm').reset();
+            }, function(error) {
+                console.error('EmailJS Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                const errToast = document.getElementById('errorToast');
+                errToast.classList.add('show');
+                setTimeout(() => errToast.classList.remove('show'), 4000);
+            });
+    }
+</script>
+
+</body>
+</html>
