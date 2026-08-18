@@ -129,34 +129,15 @@
             color: var(--accent-cyan);
         }
 
-        .social-btn-tiktok:hover {
-            border-color: #ff0050;
-            color: #25f4ee;
-        }
-
-        .social-btn-fb:hover {
-            border-color: #1877f2;
-            color: #1877f2;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--accent-green);
-            font-size: 0.85rem;
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent-green);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-green);
+        @media (hover: hover) {
+            .social-btn-tiktok:hover {
+                border-color: #ff0050;
+                color: #25f4ee;
+            }
+            .social-btn-fb:hover {
+                border-color: #1877f2;
+                color: #1877f2;
+            }
         }
 
         /* Navigation Bar Styles */
@@ -263,6 +244,7 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
             cursor: pointer;
+            background-color: var(--bg-card);
         }
 
         .gallery-item img {
@@ -330,8 +312,9 @@
             transform: translateY(20px);
             transition: transform 0.3s ease;
             position: relative;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-overlay.active .modal-box {
@@ -558,19 +541,21 @@
             position: fixed;
             bottom: 20px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            transform: translateX(-50%);
+            display: none;
             background: var(--accent-green);
             color: #000;
             padding: 12px 24px;
             border-radius: 8px;
             font-weight: bold;
             box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            transition: transform 0.4s ease;
             z-index: 2000;
         }
 
         .toast-notification.show {
-            transform: translateX(-50%) translateY(0);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .toast-notification.error {
@@ -603,9 +588,6 @@
                 <a href="https://www.facebook.com/collinsouma120016" target="_blank" rel="noopener noreferrer" class="pill social-btn-fb"><i class="fa-brands fa-facebook"></i> Collins Ouma</a>
                 <a href="https://instagram.com/_collinsouma" target="_blank" rel="noopener noreferrer" class="pill social-btn-instagram"><i class="fa-brands fa-instagram"></i> Collins Ouma</a>
             </div>
-        </div>
-        <div class="status-badge" onclick="openJobOfferModal()" style="cursor: pointer;">
-            <span class="pulse-dot"></span> Available for Hire (Click)
         </div>
     </header>
 
@@ -695,11 +677,11 @@
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.My9NJEB3wAOgsv3F2iolagHaFE?w=224&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Circuit Board"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.KA0gPJhApXFapdlKZXKpOwHaE8?w=216&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="RAM & Graphics Card"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.jUmmsDN213V4kWrUIckPCgHaFj?w=232&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Hardware Repair Workstation"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
-                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.lO1lPwzhAbbOVVGznIIhdQHaG6?w=145&h=180&c=7&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
-                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.tMwDnqd3gOmJzaDAgGNHNAHaIB?w=155&h=180&c=7&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&q=80" alt="Manufacturing Setup"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.tMwDnqd3gOmJzaDAgGNHNAHaIB?w=155&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Production Lathe"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.rNbjLKGRLwnOTeFyzqOcRQHaGA?w=217&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Hard Drive Assembly"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.Ux2nrJsMZn0OtN9sf--NowHaEK?w=288&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="PC Gaming Rig Setup"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
-                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.0WfeD85FTwC5IDpn5x19yQHaE8?w=190&h=150&c=6&r=0&o=7&pid=1.7&rm=3"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
+                    <div class="gallery-item" onclick="openLightbox(this)"><img src="https://th.bing.com/th/id/OIP.0WfeD85FTwC5IDpn5x19yQHaE8?w=190&h=150&c=6&r=0&o=7&pid=1.7&rm=3" alt="Toolstation"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                     <div class="gallery-item" onclick="openLightbox(this)"><img src="https://tse4.mm.bing.net/th/id/OIP.TlRVNdZSzIgJnudagfNGFAHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Thermal Paste & Cooling"><div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div></div>
                 </div>
             </div>
@@ -828,7 +810,6 @@
             </div>
             <div class="form-group">
                 <label for="clientMessage">Message Details</label>
-                <!-- EMPTY TEXTAREA FOR GENERAL CONTACT -->
                 <textarea id="clientMessage" name="message" rows="3" required placeholder="type your message here..."></textarea>
             </div>
             <button type="submit" id="submitBtn" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Send Direct Message</button>
@@ -836,7 +817,7 @@
 
         <div class="quick-contact-actions">
             <a href="tel:0746001286" class="quick-action-btn btn-call"><i class="fa-solid fa-phone"></i> Call Direct</a>
-            <button class="quick-action-btn btn-whatsapp" onclick="openSmartWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Dynamic WhatsApp</button>
+            <button class="quick-action-btn btn-whatsapp" onclick="openSmartWhatsApp()"><i class="fa-brands fa-whatsapp"></i> Direct WhatsApp</button>
         </div>
     </div>
 </div>
@@ -865,7 +846,6 @@
             </div>
             <div class="form-group">
                 <label for="jobMessage">Job Offer / Rejection Message</label>
-                <!-- EMPTY TEXTAREA FOR EMPLOYER TO TYPE -->
                 <textarea id="jobMessage" name="message" rows="3" required placeholder="Type your custom job offer or rejection message here..."></textarea>
             </div>
             
@@ -895,10 +875,10 @@
             <div>Expected Response: <span>within 30 minutes</span></div>
         </div>
 
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Need an urgent connection? Connect instantly on WhatsApp.</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Need an urgent connection? Connect directly on WhatsApp.</p>
 
         <div style="display: flex; gap: 10px;">
-            <button class="quick-action-btn btn-whatsapp" style="width: 100%; border:none;" onclick="openSmartWhatsAppFromSuccess()"><i class="fa-brands fa-whatsapp"></i> Connect on WhatsApp</button>
+            <button class="quick-action-btn btn-whatsapp" style="width: 100%; border:none;" onclick="openSmartWhatsAppFromSuccess()"><i class="fa-brands fa-whatsapp"></i> Connect via WhatsApp</button>
             <button class="submit-btn" style="width: auto; background: var(--bg-card); color: #fff; border: 1px solid var(--border-color);" onclick="closeSuccessModal()">Close</button>
         </div>
     </div>
@@ -914,25 +894,24 @@
      ========================================================================== -->
 <script>
     /* =========================================================================
-       1. EMAILJS CONFIGURATION KEYS
-       -------------------------------------------------------------------------
-       - Form 1 (General Contact) uses your primary EmailJS credentials.
-       - Form 2 (Job Offer) uses your second EmailJS account credentials.
+       1. EMAILJS CONFIGURATION KEYS & INITIALIZATION
        ========================================================================= */
-    // General Contact Form Credentials
     const CONTACT_PUBLIC_KEY = "9bFQf6vmPUXg4oWAY"; 
     const CONTACT_SERVICE_ID = "service_pe4c7od";
     const CONTACT_TEMPLATE_ID = "template_ie585yw";
 
-    // Job Offer Form Credentials (Insert your second account credentials here)
     const JOB_OFFER_PUBLIC_KEY = "9bFQf6vmPUXg4oWAY"; 
     const JOB_OFFER_SERVICE_ID = "service_pe4c7od";
     const JOB_OFFER_TEMPLATE_ID = "template_wjsdule";
 
+    (function() {
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(CONTACT_PUBLIC_KEY);
+        }
+    })();
+
     /* =========================================================================
        2. TAB NAVIGATION LOGIC
-       -------------------------------------------------------------------------
-       Hides all tabs and activates the selected content tab when clicked.
        ========================================================================= */
     function switchTab(evt, tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -944,8 +923,6 @@
 
     /* =========================================================================
        3. LIGHTBOX IMAGE PREVIEW CONTROLLER
-       -------------------------------------------------------------------------
-       Opens clicked gallery images in a fullscreen modal view.
        ========================================================================= */
     function openLightbox(element) {
         const imgSrc = element.querySelector('img').src;
@@ -959,8 +936,6 @@
 
     /* =========================================================================
        4. MODAL VISIBILITY CONTROLLERS
-       -------------------------------------------------------------------------
-       Opens and closes the Contact Modal, Job Offer Modal, and Success Dialog.
        ========================================================================= */
     function openContactModal() {
         document.getElementById('contactModal').classList.add('active');
@@ -982,51 +957,21 @@
         document.getElementById('successModal').classList.remove('active');
     }
 
-    // Closes pop-ups when clicking outside the box area
     function closeModalOnOverlay(e) {
         if (e.target.id === 'contactModal') closeContactModal();
         if (e.target.id === 'jobOfferModal') closeJobOfferModal();
     }
 
     /* =========================================================================
-       5. SMART WHATSAPP INTEGRATION ENGINE
-       -------------------------------------------------------------------------
-       Formats custom WhatsApp messages based on form inputs and local time.
+       5. DIRECT WHATSAPP INTEGRATION ENGINE
        ========================================================================= */
-    function generateGreeting() {
-        const hour = new Date().getHours();
-        if (hour < 12) return "Good morning";
-        if (hour < 17) return "Good afternoon";
-        return "Good evening";
-    }
-
-    // Direct WhatsApp message from general contact form
     function openSmartWhatsApp() {
-        const greeting = generateGreeting();
-        const name = document.getElementById('clientName').value.trim();
-        const service = document.getElementById('serviceType').value.trim();
-        
-        let customMessage = `${greeting} Collins, `;
-        if (name) {
-            customMessage += `my name is ${name}. `;
-        } else {
-            customMessage += `I visited your portfolio website. `;
-        }
-
-        if (service) {
-            customMessage += `I am inquiring about your services regarding: ${service}.`;
-        } else {
-            customMessage += `I visited your portfolio website and would like to know more about your services.`;
-        }
-
-        const encodedMsg = encodeURIComponent(customMessage);
-        window.open(`https://wa.me/254746001286?text=${encodedMsg}`, '_blank');
+        window.open('https://wa.me/254746001286', '_blank');
     }
 
-    // Direct WhatsApp Job Offer message
     function sendJobOfferWhatsApp() {
         const company = document.getElementById('companyName').value.trim() || 'Our Company';
-        const role = document.getElementById('jobTitle').value.trim() || 'Mechanical Engineer';
+        const role = document.getElementById('jobTitle').value.trim() || 'Engineer';
         const contact = document.getElementById('recruiterContact').value.trim();
         const userTypedMsg = document.getElementById('jobMessage').value.trim();
         
@@ -1042,7 +987,6 @@
         closeJobOfferModal();
     }
 
-    // Direct WhatsApp Rejection Letter message
     function sendRejectionWhatsApp() {
         const company = document.getElementById('companyName').value.trim() || 'Our Organization';
         const role = document.getElementById('jobTitle').value.trim() || 'the position';
@@ -1057,32 +1001,25 @@
         closeJobOfferModal();
     }
 
-    // Quick WhatsApp connect after form dispatch confirmation
     function openSmartWhatsAppFromSuccess() {
-        const greeting = generateGreeting();
-        const name = document.getElementById('clientName').value.trim() || "a client";
-        const msg = `${greeting} Collins! I just sent a form submission from your portfolio website under '${name}'. Looking forward to connecting with you.`;
-        
-        window.open(`https://wa.me/254746001286?text=${encodeURIComponent(msg)}`, '_blank');
+        // Opens directly with an empty text box so the client can type freely
+        window.open('https://wa.me/254746001286', '_blank');
         closeSuccessModal();
     }
 
     /* =========================================================================
        6. EMAILJS FORM SUBMISSION HANDLER - GENERAL CONTACT FORM
-       -------------------------------------------------------------------------
-       Dispatches General Contact Form data using Primary EmailJS Keys.
        ========================================================================= */
     function handleFormSubmit(e) {
         e.preventDefault();
 
         const submitBtn = document.getElementById('submitBtn');
         const originalText = submitBtn.innerHTML;
-        const nameInput = document.getElementById('clientName').value;
+        const nameInput = document.getElementById('clientName').value.trim();
         
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching...';
 
-        // Dispatches using CONTACT_PUBLIC_KEY as the 4th parameter
         emailjs.sendForm(CONTACT_SERVICE_ID, CONTACT_TEMPLATE_ID, e.target, CONTACT_PUBLIC_KEY)
             .then(function() {
                 submitBtn.disabled = false;
@@ -1090,6 +1027,7 @@
                 closeContactModal();
 
                 const randomRef = '#CO-' + Math.floor(1000 + Math.random() * 9000);
+                
                 document.getElementById('deliveredClientName').innerText = nameInput;
                 document.getElementById('deliveredRefCode').innerText = randomRef;
 
@@ -1108,20 +1046,17 @@
 
     /* =========================================================================
        7. EMAILJS FORM SUBMISSION HANDLER - JOB OFFER FORM
-       -------------------------------------------------------------------------
-       Dispatches Job Offer Form data using Secondary EmailJS Keys.
        ========================================================================= */
     function handleJobOfferSubmit(e) {
         e.preventDefault();
 
         const submitBtn = document.getElementById('offerSubmitBtn');
         const originalText = submitBtn.innerHTML;
-        const companyInput = document.getElementById('companyName').value;
+        const companyInput = document.getElementById('companyName').value.trim();
         
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching Offer...';
 
-        // Dispatches using JOB_OFFER_PUBLIC_KEY as the 4th parameter
         emailjs.sendForm(JOB_OFFER_SERVICE_ID, JOB_OFFER_TEMPLATE_ID, e.target, JOB_OFFER_PUBLIC_KEY)
             .then(function() {
                 submitBtn.disabled = false;
